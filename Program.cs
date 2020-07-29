@@ -42,7 +42,7 @@ namespace webreq
                     n.InnerText.Replace("\n", string.Empty).Replace("\n", string.Empty); // removes all empty lines
                     products.Add(new ProductInfo {
                         VariantId = long.Parse(n.Attributes["value"].Value),
-                        Size = n.InnerText.Split('-')[0].Trim()
+                        Size = float.Parse(n.InnerText.Split('-')[0].Trim())
                     });
                 }
             }

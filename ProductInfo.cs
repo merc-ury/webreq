@@ -5,6 +5,6 @@ namespace webreq
     public class ProductInfo
     {
         public long VariantId { get; set; }
-        public string Size { get; set; }
+        public float Size { get; set; }
     }
 }
