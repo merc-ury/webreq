@@ -61,7 +61,7 @@ namespace QuickType
         public long Id { get; set; }
 
         [JsonProperty("properties")]
-        public Attributes Properties { get; set; }
+        public Properties Properties { get; set; }
 
         [JsonProperty("quantity")]
         public long Quantity { get; set; }
@@ -104,7 +104,7 @@ namespace QuickType
         public long Grams { get; set; }
 
         [JsonProperty("vendor")]
-        public Vendor Vendor { get; set; }
+        public string Vendor { get; set; }
 
         [JsonProperty("taxable")]
         public bool Taxable { get; set; }
@@ -134,16 +134,16 @@ namespace QuickType
         public Uri Image { get; set; }
 
         [JsonProperty("handle")]
-        public Handle Handle { get; set; }
+        public string Handle { get; set; }
 
         [JsonProperty("requires_shipping")]
         public bool RequiresShipping { get; set; }
 
         [JsonProperty("product_type")]
-        public ProductType ProductType { get; set; }
+        public string ProductType { get; set; }
 
         [JsonProperty("product_title")]
-        public ProductTitle ProductTitle { get; set; }
+        public string ProductTitle { get; set; }
 
         [JsonProperty("product_description")]
         public string ProductDescription { get; set; }
@@ -170,7 +170,7 @@ namespace QuickType
         public double AspectRatio { get; set; }
 
         [JsonProperty("alt")]
-        public Alt Alt { get; set; }
+        public string Alt { get; set; }
 
         [JsonProperty("height")]
         public long Height { get; set; }
@@ -185,23 +185,17 @@ namespace QuickType
     public partial class OptionsWithValue
     {
         [JsonProperty("name")]
-        public Name Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("value")]
         public string Value { get; set; }
     }
 
-    public enum Alt { NikeAirMax90RoyalBlueCd0881102JimmyJazz };
-
-    public enum Handle { NikeAirMax90RoyalCd0881102 };
-
-    public enum Name { Size };
-
-    public enum ProductTitle { AirMax90Royal };
-
-    public enum ProductType { The1143FootwearMensNswRunning };
-
-    public enum Vendor { Nike };
+    public partial class Properties
+    {
+        [JsonProperty("'_limited_release'", NullValueHandling = NullValueHandling.Ignore)]
+        public string LimitedRelease { get; set; }
+    }
 
     public partial class CartInfo
     {
@@ -220,185 +214,9 @@ namespace QuickType
             MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
             DateParseHandling = DateParseHandling.None,
             Converters = {
-                AltConverter.Singleton,
-                HandleConverter.Singleton,
-                NameConverter.Singleton,
-                ProductTitleConverter.Singleton,
-                ProductTypeConverter.Singleton,
-                VendorConverter.Singleton,
                 new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
             },
         };
-    }
-
-    internal class AltConverter : JsonConverter
-    {
-        public override bool CanConvert(Type t) => t == typeof(Alt) || t == typeof(Alt?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
-        {
-            if (reader.TokenType == JsonToken.Null) return null;
-            var value = serializer.Deserialize<string>(reader);
-            if (value == "Nike  Air Max 90 Royal  Blue - CD0881-102 | Jimmy Jazz")
-            {
-                return Alt.NikeAirMax90RoyalBlueCd0881102JimmyJazz;
-            }
-            throw new Exception("Cannot unmarshal type Alt");
-        }
-
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
-        {
-            if (untypedValue == null)
-            {
-                serializer.Serialize(writer, null);
-                return;
-            }
-            var value = (Alt)untypedValue;
-            if (value == Alt.NikeAirMax90RoyalBlueCd0881102JimmyJazz)
-            {
-                serializer.Serialize(writer, "Nike  Air Max 90 Royal  Blue - CD0881-102 | Jimmy Jazz");
-                return;
-            }
-            throw new Exception("Cannot marshal type Alt");
-        }
-
-        public static readonly AltConverter Singleton = new AltConverter();
-    }
-
-    internal class HandleConverter : JsonConverter
-    {
-        public override bool CanConvert(Type t) => t == typeof(Handle) || t == typeof(Handle?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
-        {
-            if (reader.TokenType == JsonToken.Null) return null;
-            var value = serializer.Deserialize<string>(reader);
-            if (value == "nike-air-max-90-royal-cd0881-102")
-            {
-                return Handle.NikeAirMax90RoyalCd0881102;
-            }
-            throw new Exception("Cannot unmarshal type Handle");
-        }
-
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
-        {
-            if (untypedValue == null)
-            {
-                serializer.Serialize(writer, null);
-                return;
-            }
-            var value = (Handle)untypedValue;
-            if (value == Handle.NikeAirMax90RoyalCd0881102)
-            {
-                serializer.Serialize(writer, "nike-air-max-90-royal-cd0881-102");
-                return;
-            }
-            throw new Exception("Cannot marshal type Handle");
-        }
-
-        public static readonly HandleConverter Singleton = new HandleConverter();
-    }
-
-    internal class NameConverter : JsonConverter
-    {
-        public override bool CanConvert(Type t) => t == typeof(Name) || t == typeof(Name?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
-        {
-            if (reader.TokenType == JsonToken.Null) return null;
-            var value = serializer.Deserialize<string>(reader);
-            if (value == "Size")
-            {
-                return Name.Size;
-            }
-            throw new Exception("Cannot unmarshal type Name");
-        }
-
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
-        {
-            if (untypedValue == null)
-            {
-                serializer.Serialize(writer, null);
-                return;
-            }
-            var value = (Name)untypedValue;
-            if (value == Name.Size)
-            {
-                serializer.Serialize(writer, "Size");
-                return;
-            }
-            throw new Exception("Cannot marshal type Name");
-        }
-
-        public static readonly NameConverter Singleton = new NameConverter();
-    }
-
-    internal class ProductTitleConverter : JsonConverter
-    {
-        public override bool CanConvert(Type t) => t == typeof(ProductTitle) || t == typeof(ProductTitle?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
-        {
-            if (reader.TokenType == JsonToken.Null) return null;
-            var value = serializer.Deserialize<string>(reader);
-            if (value == "Air Max 90 Royal")
-            {
-                return ProductTitle.AirMax90Royal;
-            }
-            throw new Exception("Cannot unmarshal type ProductTitle");
-        }
-
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
-        {
-            if (untypedValue == null)
-            {
-                serializer.Serialize(writer, null);
-                return;
-            }
-            var value = (ProductTitle)untypedValue;
-            if (value == ProductTitle.AirMax90Royal)
-            {
-                serializer.Serialize(writer, "Air Max 90 Royal");
-                return;
-            }
-            throw new Exception("Cannot marshal type ProductTitle");
-        }
-
-        public static readonly ProductTitleConverter Singleton = new ProductTitleConverter();
-    }
-
-    internal class ProductTypeConverter : JsonConverter
-    {
-        public override bool CanConvert(Type t) => t == typeof(ProductType) || t == typeof(ProductType?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
-        {
-            if (reader.TokenType == JsonToken.Null) return null;
-            var value = serializer.Deserialize<string>(reader);
-            if (value == "1143 - Footwear - Mens NSW - Running")
-            {
-                return ProductType.The1143FootwearMensNswRunning;
-            }
-            throw new Exception("Cannot unmarshal type ProductType");
-        }
-
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
-        {
-            if (untypedValue == null)
-            {
-                serializer.Serialize(writer, null);
-                return;
-            }
-            var value = (ProductType)untypedValue;
-            if (value == ProductType.The1143FootwearMensNswRunning)
-            {
-                serializer.Serialize(writer, "1143 - Footwear - Mens NSW - Running");
-                return;
-            }
-            throw new Exception("Cannot marshal type ProductType");
-        }
-
-        public static readonly ProductTypeConverter Singleton = new ProductTypeConverter();
     }
 
     internal class ParseStringConverter : JsonConverter
@@ -430,39 +248,5 @@ namespace QuickType
         }
 
         public static readonly ParseStringConverter Singleton = new ParseStringConverter();
-    }
-
-    internal class VendorConverter : JsonConverter
-    {
-        public override bool CanConvert(Type t) => t == typeof(Vendor) || t == typeof(Vendor?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
-        {
-            if (reader.TokenType == JsonToken.Null) return null;
-            var value = serializer.Deserialize<string>(reader);
-            if (value == "Nike")
-            {
-                return Vendor.Nike;
-            }
-            throw new Exception("Cannot unmarshal type Vendor");
-        }
-
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
-        {
-            if (untypedValue == null)
-            {
-                serializer.Serialize(writer, null);
-                return;
-            }
-            var value = (Vendor)untypedValue;
-            if (value == Vendor.Nike)
-            {
-                serializer.Serialize(writer, "Nike");
-                return;
-            }
-            throw new Exception("Cannot marshal type Vendor");
-        }
-
-        public static readonly VendorConverter Singleton = new VendorConverter();
     }
 }

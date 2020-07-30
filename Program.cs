@@ -15,7 +15,7 @@ namespace webreq
     class Program
     {
         // TEST URL
-        static string baseURL = "https://www.jimmyjazz.com/collections/nike-air-max-90/products/nike-air-max-90-royal-cd0881-102";
+        static string baseURL = "https://www.jimmyjazz.com/collections/mens-basketball-shoes/products/jordan-westbrook-one-take-cj0780-103";
         static HttpClient client;
 
         static async Task Main(string[] args)
@@ -30,14 +30,14 @@ namespace webreq
 
             var products = await GetProducts();
 
-            System.Console.WriteLine(products.Count);
+            System.Console.WriteLine("Sizes available: " + products.Count);
             
             for (int i = 0; i < products.Count; i++)
             {
                 if (await AddToCart(products[i].VariantId, products[i].Size) == 200)
-                    System.Console.WriteLine("Success " + products[i].Size);
+                    System.Console.WriteLine("Successfully added " + products[i].Size);
                 else
-                    System.Console.WriteLine("Failed");
+                    System.Console.WriteLine("Failed to add " + products[i].Size);
 
                 await Task.Delay(1000);
             }
@@ -67,7 +67,7 @@ namespace webreq
                     products.Add(new ProductInfo {
                         ProductName = titleNode,
                         VariantId = Int64.Parse(n.Attributes["value"].Value.Trim()),
-                        Size = double.Parse(n.InnerText.Split('-')[0].Trim())
+                        Size = n.InnerText.Split('-')[0].Trim()
                     });
                 }
             }
@@ -75,7 +75,7 @@ namespace webreq
             return products;
         }
 
-        static async Task<int> AddToCart(long variantId, double size = 0)
+        static async Task<int> AddToCart(long variantId, string size = "")
         {
             string postURL = "https://www.jimmyjazz.com/cart/add.js";
             
