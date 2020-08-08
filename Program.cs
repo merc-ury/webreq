@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http;
@@ -15,14 +16,14 @@ namespace webreq
     class Program
     {
         // TEST URL
-        static string baseURL = "https://www.jimmyjazz.com/collections/mens-basketball-shoes/products/jordan-westbrook-one-take-cj0780-103";
+        static string baseURL = "https://www.jimmyjazz.com/collections/mens-basketball-shoes/products/jordan-react-elevation-ck6618-002";
         static HttpClient client;
 
         static async Task Main(string[] args)
         {
             HttpClientHandler handler = new HttpClientHandler 
             {
-                CookieContainer = new System.Net.CookieContainer()
+                CookieContainer = new CookieContainer()
             };
 
             client = new HttpClient(handler);
@@ -92,29 +93,20 @@ namespace webreq
 
             var response = await client.PostAsync(postURL, sData);
 
-            //System.Console.WriteLine(await response.Content.ReadAsStringAsync());
-
             return (int)response.StatusCode;
         }
 
-        static async Task<long> GetCartItems()
+        static async Task<int> GetCartItems()
         {
             string cartUrl = "https://www.jimmyjazz.com/cart.js";
 
             var response = await client.GetStringAsync(cartUrl);
             var cartInfo = CartInfo.FromJson(response);
 
-            //System.Console.WriteLine(response);
             foreach (Item i in cartInfo.Items)
               Console.WriteLine("Title: {0} | Variant Id: {1} | Size: {2}\n", i.ProductTitle, i.VariantId, i.VariantTitle);
 
-            return cartInfo.ItemCount;
-        }
-
-        static async Task<int> Checkout()
-        {
-            await Task.Delay(0);
-            return 0;
+            return (int)cartInfo.ItemCount;
         }
     }
 }
