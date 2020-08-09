@@ -1,1 +1,2 @@
-c# web req
+### C# Shopify Bot
+This project is no longer supported! 
